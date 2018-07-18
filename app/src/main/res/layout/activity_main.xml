@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    tools:context=".MainActivity">
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_weight="7"
+        android:id="@+id/rvChatBox"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp" />
+
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <EditText
+            android:textSize="20sp"
+            android:layout_weight="5"
+            android:hint="Click to chat!"
+            android:gravity="bottom"
+            android:layout_gravity="bottom"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+
+        <Button
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="SEND"/>
+
+    </LinearLayout>
+
+</LinearLayout>

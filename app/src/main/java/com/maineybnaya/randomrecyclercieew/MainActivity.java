@@ -1,6 +1,8 @@
 package com.maineybnaya.randomrecyclercieew;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,12 +10,17 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
 import com.maineybnaya.randomrecyclercieew.adapterstobinddata.AdapterToBindData;
 import com.maineybnaya.randomrecyclercieew.modelsorsaydataset.models;
 
@@ -23,7 +30,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button btnSO;
+    Button btnSend;
+    EditText etChat;
 
     private static final int RC_SIGN_IN = 007;
     private static final String TAG = "RNADI MADARJAAT";
@@ -41,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnSO = findViewById(R.id.btnSO);
+        etChat = findViewById(R.id.etChat);
 
         rvChatObject = findViewById(R.id.rvChatBox);
 
@@ -53,63 +61,74 @@ public class MainActivity extends AppCompatActivity {
 
         rvChatObject.setAdapter(merarVAdapterObject);
 
+        btnSend = findViewById(R.id.btnSend);
+
 /*
 to logoff a user and bring him to first screen
 NOTE: back karte hi isme bhi wahi prev data dikhai deta hai
  */
-        btnSO.setOnClickListener(new View.OnClickListener() {
+        btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AuthUI.getInstance().signOut(MainActivity.this);
-                startActivityForResult(  //this brings the login wala sundar UI
-                        AuthUI.getInstance()
-                                .createSignInIntentBuilder()
-                                .setAvailableProviders(Arrays.asList(
-                                        new AuthUI.IdpConfig.GoogleBuilder().build(),
-                                        new AuthUI.IdpConfig.EmailBuilder().build(),
-                                        new AuthUI.IdpConfig.PhoneBuilder().build()))
-                                .build(),
-                        RC_SIGN_IN);
+
+                String chat = etChat.getText().toString();
+
+                FirebaseDatabase.getInstance().getReference().push().setValue(chat);
+//
             }
         });
 
 
+        /* FOR SIGNOUT BUTTON
 
+       // AuthUI.getInstance().signOut(MainActivity.this);
+//                startActivityForResult(  //this brings the login wala sundar UI
+//                        AuthUI.getInstance()
+//                                .createSignInIntentBuilder()
+//                                .setAvailableProviders(Arrays.asList(
+//                                        new AuthUI.IdpConfig.GoogleBuilder().build(),
+//                                        new AuthUI.IdpConfig.EmailBuilder().build(),
+//                                        new AuthUI.IdpConfig.PhoneBuilder().build()))
+//                                .build(),
+//                        RC_SIGN_IN);
+
+
+*/
 
         if (mv_loginUser != null) {
             rvChatObject.setLayoutManager(new LinearLayoutManager(this)); //By default vertical
             merarVAdapterObject = new AdapterToBindData(listObject, this);
-
             rvChatObject.setAdapter(merarVAdapterObject);
 
+            FirebaseDatabase.getInstance().getReference().addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-            listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-            listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
+                    String chatData = dataSnapshot.getValue(String.class);
+                    listObject.add(new models(mv_loginUser.getDisplayName(),chatData));
+                    merarVAdapterObject.notifyDataSetChanged();
+                }
 
-            listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-            listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
+                }
 
-            listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-            listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-            listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-            listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-            listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-            listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-            listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-            listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-            listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-            listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-            listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-            listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-            listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-            listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-            listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-            listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-            listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-            listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-            listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-            listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
 
 
         } else {
@@ -144,36 +163,37 @@ NOTE: back karte hi isme bhi wahi prev data dikhai deta hai
 
                 rvChatObject.setLayoutManager(new LinearLayoutManager(this)); //By default vertical
                 merarVAdapterObject = new AdapterToBindData(listObject, this);
-
                 rvChatObject.setAdapter(merarVAdapterObject);
 
-                listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-                listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
+                FirebaseDatabase.getInstance().getReference().addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
+                        String chatData = dataSnapshot.getValue(String.class);
+                        listObject.add(new models("tatti",chatData));
+                        merarVAdapterObject.notifyDataSetChanged();
+                    }
 
-                listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-                listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-                listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-                listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-                listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-                listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-                listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-                listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-                listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-                listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-                listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-                listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-                listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-                listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-                listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-                listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-                listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-                listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-                listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
-                listObject.add(new models("Sahil", "Kya baat hai launde.. Chha gya tuu toh.. Balle!!!"));
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
 
 
             } else {
@@ -188,10 +208,6 @@ NOTE: back karte hi isme bhi wahi prev data dikhai deta hai
                 }
             }
         }
-    }
-
-    public static void fun1(){
-
     }
 
 

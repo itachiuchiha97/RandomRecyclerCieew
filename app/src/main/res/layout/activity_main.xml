@@ -22,6 +22,7 @@
         android:layout_height="0dp">
 
         <EditText
+            android:id="@+id/etChat"
             android:textSize="20sp"
             android:layout_weight="5"
             android:hint="Click to chat!"
@@ -31,7 +32,7 @@
             android:layout_height="match_parent" />
 
         <Button
-            android:id="@+id/btnSO"
+            android:id="@+id/btnSend"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
